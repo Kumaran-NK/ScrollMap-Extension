@@ -1,0 +1,194 @@
+/* review-prompt.css — ScrollMap Rating & Review Widget */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap');
+
+.sm-review-prompt {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 320px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+    z-index: 999999;
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    overflow: hidden;
+    transform: translateY(120px) scale(0.95);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sm-review-prompt.sm-rp-visible {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sm-review-prompt.sm-rp-left {
+    right: auto;
+    left: 24px;
+}
+
+/* Dark theme overrides */
+.sm-review-prompt.scrollmap-dark {
+    background: #1a1f2e;
+    border-color: #2e3447;
+    color: #e2e8f0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sm-rp-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+}
+
+.sm-rp-body {
+    padding: 16px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.sm-rp-stars {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.sm-rp-star {
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease, opacity 0.15s;
+    opacity: 0.4;
+}
+
+.sm-rp-star.lit,
+.sm-rp-star:hover {
+    opacity: 1;
+    transform: scale(1.25);
+}
+
+.sm-rp-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.scrollmap-dark .sm-rp-title {
+    color: #f8fafc;
+}
+
+.sm-rp-sub {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.45;
+    margin-bottom: 14px;
+}
+
+.scrollmap-dark .sm-rp-sub {
+    color: #94a3b8;
+}
+
+.sm-rp-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.sm-rp-btn-yes {
+    flex: 1;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.sm-rp-btn-yes:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+}
+
+.sm-rp-btn-later {
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    border-radius: 9px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.scrollmap-dark .sm-rp-btn-later {
+    border-color: #374151;
+    color: #cbd5e1;
+}
+
+.sm-rp-btn-later:hover {
+    background: #f3f4f6;
+}
+
+.scrollmap-dark .sm-rp-btn-later:hover {
+    background: #242937;
+}
+
+.sm-rp-btn-no {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 11px;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.15s;
+}
+
+.sm-rp-btn-no:hover {
+    color: #ef4444;
+}
+
+/* Thank you state */
+.sm-rp-thankyou {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 18px;
+    text-align: center;
+}
+
+.sm-rp-ty-emoji {
+    font-size: 32px;
+    margin-bottom: 6px;
+}
+
+.sm-rp-ty-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #16a34a;
+    margin-bottom: 4px;
+}
+
+.sm-rp-ty-sub {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.45;
+}
+
+.scrollmap-dark .sm-rp-ty-sub {
+    color: #94a3b8;
+}

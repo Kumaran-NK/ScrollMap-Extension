@@ -861,9 +861,9 @@ class ScrollMap {
         const isDark   = this.panel.classList.contains('scrollmap-dark');
         const isLeft   = this.panelPosition === 'left';
 
-        // ↓ Replace this with your actual extension ID from the Web Store
-        const EXT_ID   = 'YOUR_EXTENSION_ID_HERE';
-        const storeUrl = `https://chromewebstore.google.com/detail/${EXT_ID}/reviews`;
+        // Dynamically resolve runtime extension ID or fallback
+        const extId    = (typeof chrome !== 'undefined' && chrome.runtime?.id) ? chrome.runtime.id : 'YOUR_EXTENSION_ID_HERE';
+        const storeUrl = `https://chromewebstore.google.com/detail/${extId}/reviews`;
 
         const prompt = document.createElement('div');
         prompt.className = 'sm-review-prompt'

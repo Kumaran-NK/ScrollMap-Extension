@@ -183,13 +183,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 /* ── Sessions ───────────────────────────────────── */
                 case 'SAVE_SESSION': {
                     const sessionName = sanitizeStr(message.sessionName, MAX_SESSION_NAME) || 'Session';
-                    const rawBms = Array.isArray(message.bookmarks) ? message.bookmarks : [];
-                    const bookmarks = rawBms
+                    const rawBms      = Array.isArray(message.bookmarks) ? message.bookmarks : [];
+                    const bookmarks   = rawBms
                         .filter(b => b && typeof b === 'object' && isSafeUrl(b.url || ''))
                         .map(b => ({
-                            url: sanitizeStr(b.url, MAX_URL_LENGTH),
-                            title: sanitizeStr(b.title, MAX_TITLE_LENGTH),
-                            scrollY: typeof b.scrollY === 'number' ? b.scrollY : 0,
+                            id:        b.id || `${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+                            url:       sanitizeStr(b.url, MAX_URL_LENGTH),
+                            title:     sanitizeStr(b.title, MAX_TITLE_LENGTH),
+                            scrollY:   typeof b.scrollY === 'number' ? b.scrollY : 0,
+                            favicon:   b.favicon || null,
                             timestamp: typeof b.timestamp === 'string' && !isNaN(new Date(b.timestamp)) ? b.timestamp : new Date().toISOString(),
                         }))
                         .slice(0, MAX_BOOKMARKS_PER_SESSION);
@@ -197,12 +199,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     try {
                         const { overHard } = await getQuotaStatus();
                         if (overHard) { respond({ success: false, error: 'Storage full' }); break; }
-                        const r = await chrome.storage.local.get('sessions');
-                        let sessions = Array.isArray(r.sessions) ? r.sessions : [];
-                        sessions.push({ name: sessionName, bookmarks, savedAt: new Date().toISOString() });
+                        const r        = await chrome.storage.local.get(['savedSessions', 'sessions']);
+                        let sessions   = Array.isArray(r.savedSessions) ? r.savedSessions : (Array.isArray(r.sessions) ? r.sessions : []);
+                        const newSession = {
+                            id: Date.now(),
+                            name: sessionName,
+                            bookmarks,
+                            tabCount: bookmarks.length,
+                            timestamp: new Date().toISOString(),
+                            savedAt: new Date().toISOString()
+                        };
+                        sessions.push(newSession);
                         if (sessions.length > MAX_SESSIONS) sessions = sessions.slice(-MAX_SESSIONS);
-                        await chrome.storage.local.set({ sessions });
-                        respond({ success: true });
+                        await chrome.storage.local.set({ savedSessions: sessions });
+                        respond({ success: true, session: newSession });
                     } catch (err) {
                         logError('SAVE_SESSION', err.message);
                         respond({ success: false, error: err.message });
@@ -212,8 +222,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
                 case 'GET_SESSIONS': {
                     try {
-                        const r = await chrome.storage.local.get('sessions');
-                        respond({ sessions: r.sessions || [] });
+                        const r = await chrome.storage.local.get(['savedSessions', 'sessions']);
+                        let sessions = Array.isArray(r.savedSessions) ? r.savedSessions : (Array.isArray(r.sessions) ? r.sessions : []);
+                        respond({ sessions });
                     } catch {
                         respond({ sessions: [] });
                     }
@@ -221,12 +232,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 }
 
                 case 'DELETE_SESSION': {
-                    const idx = typeof message.index === 'number' ? message.index : -1;
+                    const sessionId = message.id ?? message.index;
                     try {
-                        const r = await chrome.storage.local.get('sessions');
-                        const sessions = Array.isArray(r.sessions) ? r.sessions : [];
-                        if (idx >= 0 && idx < sessions.length) sessions.splice(idx, 1);
-                        await chrome.storage.local.set({ sessions });
+                        const r        = await chrome.storage.local.get(['savedSessions', 'sessions']);
+                        let sessions   = Array.isArray(r.savedSessions) ? r.savedSessions : (Array.isArray(r.sessions) ? r.sessions : []);
+                        if (typeof sessionId === 'number') {
+                            sessions = sessions.filter((s, idx) => s.id !== sessionId && idx !== sessionId);
+                        } else if (typeof message.index === 'number' && message.index >= 0 && message.index < sessions.length) {
+                            sessions.splice(message.index, 1);
+                        }
+                        await chrome.storage.local.set({ savedSessions: sessions });
                         respond({ success: true });
                     } catch (err) {
                         logError('DELETE_SESSION', err.message);
@@ -236,15 +251,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 }
 
                 case 'RENAME_SESSION': {
-                    const { index, name } = message;
+                    const { id, index, name } = message;
                     const cleanName = sanitizeStr(name, MAX_SESSION_NAME);
-                    if (!cleanName || typeof index !== 'number') { respond({ success: false }); break; }
+                    if (!cleanName) { respond({ success: false }); break; }
                     try {
-                        const r = await chrome.storage.local.get('sessions');
-                        const sessions = Array.isArray(r.sessions) ? r.sessions : [];
-                        if (index >= 0 && index < sessions.length) {
-                            sessions[index].name = cleanName;
-                            await chrome.storage.local.set({ sessions });
+                        const r        = await chrome.storage.local.get(['savedSessions', 'sessions']);
+                        let sessions   = Array.isArray(r.savedSessions) ? r.savedSessions : (Array.isArray(r.sessions) ? r.sessions : []);
+                        const session  = sessions.find((s, idx) => (id !== undefined && s.id === id) || idx === index);
+                        if (session) {
+                            session.name = cleanName;
+                            await chrome.storage.local.set({ savedSessions: sessions });
                         }
                         respond({ success: true });
                     } catch (err) {
@@ -299,7 +315,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     if (!imported || typeof imported !== 'object') { respond({ success: false }); break; }
                     try {
                         const existing = await chrome.storage.local.get(null);
-                        const merged = { ...imported, ...existing };
+                        const merged = { ...existing, ...imported };
                         await chrome.storage.local.set(merged);
                         respond({ success: true });
                     } catch (err) {
