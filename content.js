@@ -1469,9 +1469,10 @@ class ScrollMap {
         el.innerHTML = `
             <div class="sm-sticky-header" title="Drag to move">
                 <span class="sm-sticky-grip" aria-hidden="true">⠿</span>
-                <span class="sm-sticky-label">${escHtml(title)}</span>
+                <span class="sm-sticky-label" title="${escHtml(title)}">${escHtml(title)}</span>
                 <div class="sm-sticky-controls">
-                    <button class="sm-sk-btn sm-sk-color" aria-label="Change color">🎨</button>
+                    <button class="sm-sk-btn sm-sk-edit" title="Edit text & attach media" aria-label="Edit note">✎</button>
+                    <button class="sm-sk-btn sm-sk-color" title="Change color" aria-label="Change color">🎨</button>
                     <button class="sm-sk-btn sm-sk-expand" aria-label="${sticky.expanded?'Compact':'Expand'}">${sticky.expanded?'⊖':'⊕'}</button>
                     <button class="sm-sk-btn sm-sk-toggle" aria-label="${sticky.minimized?'Show':'Minimize'}">${sticky.minimized?'▲':'▼'}</button>
                     <button class="sm-sk-btn sm-sk-close" aria-label="Unpin note">✕</button>
@@ -1480,9 +1481,15 @@ class ScrollMap {
             <div class="sm-sticky-swatches" style="display:none">
                 ${['yellow','green','blue','pink','purple'].map(c=>`<button data-color="${c}" style="background:${PALETTE[c].bg}" title="${c[0].toUpperCase()+c.slice(1)}" aria-label="${c}"></button>`).join('')}
             </div>
-            <div class="sm-sticky-body">
-                ${content ? `<div class="sm-sticky-text">${escHtml(content)}</div>` : ''}
+            <div class="sm-sticky-body" title="Click text to edit note">
+                ${content ? `<div class="sm-sticky-text">${escHtml(content)}</div>` : `<div class="sm-sticky-text sm-sticky-placeholder">✏️ Click to write note...</div>`}
                 ${buildMedia(!!sticky.expanded)}
+                <div class="sm-sticky-quick-actions">
+                    <button class="sm-sticky-act-btn sm-sk-act-edit" title="Write/edit text">✏️ Edit</button>
+                    <button class="sm-sticky-act-btn sm-sk-act-image" title="Attach image">🖼 Image</button>
+                    <button class="sm-sticky-act-btn sm-sk-act-video" title="Attach video">🎬 Video</button>
+                    <button class="sm-sticky-act-btn sm-sk-act-link" title="Attach link">🔗 Link</button>
+                </div>
             </div>
             <div class="sm-sticky-resize-handle" title="Drag to resize" aria-hidden="true">⇲</div>`;
 
@@ -1491,6 +1498,37 @@ class ScrollMap {
     }
 
     _setupStickyBehavior(el, sticky) {
+        const openEditorWithAction = (action = null) => {
+            let note = this.notes.find(n => n.id === sticky.noteId);
+            if (!note) {
+                note = {
+                    id: sticky.noteId || this.nextNoteId++,
+                    title: sticky.noteTitle || '✏️ Sticky Note',
+                    content: sticky.noteContent || '',
+                    media: JSON.parse(JSON.stringify(sticky.media || [])),
+                    timestamp: new Date().toISOString()
+                };
+                this.notes.unshift(note);
+                sticky.noteId = note.id;
+                this.saveNotes();
+            }
+            this.showNoteModal(note);
+            if (action) {
+                setTimeout(() => {
+                    if (action === 'image') document.querySelector('#snm-add-image')?.click();
+                    if (action === 'video') document.querySelector('#snm-add-video')?.click();
+                    if (action === 'link')  document.querySelector('#snm-add-link')?.click();
+                }, 120);
+            }
+        };
+
+        el.querySelector('.sm-sk-edit')?.addEventListener('click', e => { e.stopPropagation(); openEditorWithAction(); });
+        el.querySelector('.sm-sticky-text')?.addEventListener('click', e => { e.stopPropagation(); openEditorWithAction(); });
+        el.querySelector('.sm-sk-act-edit')?.addEventListener('click', e => { e.stopPropagation(); openEditorWithAction(); });
+        el.querySelector('.sm-sk-act-image')?.addEventListener('click', e => { e.stopPropagation(); openEditorWithAction('image'); });
+        el.querySelector('.sm-sk-act-video')?.addEventListener('click', e => { e.stopPropagation(); openEditorWithAction('video'); });
+        el.querySelector('.sm-sk-act-link')?.addEventListener('click', e => { e.stopPropagation(); openEditorWithAction('link'); });
+
         const header = el.querySelector('.sm-sticky-header');
         header.addEventListener('mousedown', e => {
             if (e.target.closest('.sm-sticky-controls')) return;

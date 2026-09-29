@@ -1567,3 +1567,48 @@
 .sm-sticky-note:hover .sm-sticky-resize-handle { opacity: 0.45; }
 .sm-sticky-resize-handle:hover { opacity: 1 !important; }
 .sm-sticky-note.sm-sticky-min .sm-sticky-resize-handle { display: none; }
+
+/* ─── STICKY NOTE QUICK ACTIONS & EDITING ───── */
+.sm-sk-edit:hover { background: rgba(22,163,74,0.22) !important; color: #16a34a !important; opacity: 1 !important; }
+
+.sm-sticky-text {
+    font-family: 'Caveat', cursive, sans-serif;
+    font-size: 17px; line-height: 1.4;
+    color: var(--sm-sk-txt, #713f12);
+    word-break: break-word; cursor: pointer;
+    transition: background 0.15s;
+    padding: 3px 6px; border-radius: 6px;
+    user-select: text;
+}
+.sm-sticky-text:hover {
+    background: rgba(0,0,0,0.05);
+}
+.sm-sticky-placeholder {
+    opacity: 0.5; font-style: italic; font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.sm-sticky-quick-actions {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    margin-top: 8px; padding-top: 6px;
+    border-top: 1px dashed rgba(0,0,0,0.09);
+    opacity: 0.7; transition: opacity 0.18s;
+}
+.sm-sticky-note:hover .sm-sticky-quick-actions {
+    opacity: 1;
+}
+.sm-sticky-act-btn {
+    padding: 3px 7px;
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 10.5px; font-weight: 600;
+    color: var(--sm-sk-txt, #713f12);
+    cursor: pointer; transition: all 0.15s;
+    user-select: none;
+}
+.sm-sticky-act-btn:hover {
+    background: rgba(0,0,0,0.14);
+    transform: translateY(-1px);
+}
