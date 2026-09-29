@@ -187,6 +187,9 @@ class ScrollMap {
         this._spaLastUrl         = window.location.href;
         this._spaPollingId       = null;
         this._savingBookmarks    = false;
+        this.showToggleButton   = true;
+        this.showQuickAdd        = true;
+        this.idleTransparent     = true;
         this._saveBookmarkQueue  = [];
         this._lastAddTime        = 0;
         this._isFirstVisit       = false;
@@ -211,6 +214,7 @@ class ScrollMap {
             this.renderAllStickyNotes();
             this.setupEventListeners();
             this.setupKeyboardShortcut();
+            this.setupProximitySensor();
             this.setupMutationObserver();
             this.setupSPADetection();
             this.checkLastPosition();
@@ -251,6 +255,9 @@ class ScrollMap {
                 this.autoSaveEnabled   = r.settings.autoSave           !== false;
                 this.showPrompt        = r.settings.showPrompt         !== false;
                 this.screenshotEnabled = r.settings.screenshotEnabled  !== false;
+                this.showToggleButton  = r.settings.showToggleButton   !== false;
+                this.showQuickAdd     = r.settings.showQuickAdd       !== false;
+                this.idleTransparent  = r.settings.idleTransparent    !== false;
                 this.panelPosition     = r.settings.panelPosition      || 'right';
                 this.theme             = r.settings.theme              || 'light';
             }
@@ -259,7 +266,48 @@ class ScrollMap {
         }
     }
 
-    applySettings() { this.applyTheme(); this.applyPanelPosition(); }
+    applySettings() {
+        this.applyTheme();
+        this.applyPanelPosition();
+        this.applyFloatingVisibility();
+    }
+
+    applyFloatingVisibility() {
+        if (this.toggleBtn) {
+            this.toggleBtn.style.display = this.showToggleButton !== false ? 'flex' : 'none';
+            this.toggleBtn.classList.toggle('sm-idle-transparent', this.idleTransparent !== false);
+        }
+        if (this.quickAddBtn) {
+            this.quickAddBtn.style.display = this.showQuickAdd !== false ? 'flex' : 'none';
+            this.quickAddBtn.classList.toggle('sm-idle-transparent', this.idleTransparent !== false);
+        }
+    }
+
+    setupProximitySensor() {
+        let ticking = false;
+        window.addEventListener('mousemove', e => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    this._checkMouseProximity(e.clientX, e.clientY);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    _checkMouseProximity(mx, my) {
+        if (!this.idleTransparent) return;
+        const DISTANCE_THRESHOLD = 120;
+        [this.quickAddBtn, this.toggleBtn].forEach(btn => {
+            if (!btn || btn.style.display === 'none') return;
+            const rect = btn.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dist = Math.hypot(mx - cx, my - cy);
+            btn.classList.toggle('sm-near-mouse', dist < DISTANCE_THRESHOLD);
+        });
+    }
 
     applyTheme() {
         let dark = false;
@@ -1911,6 +1959,9 @@ class ScrollMap {
                 this.autoSaveEnabled   = msg.settings.autoSave           !== false;
                 this.showPrompt        = msg.settings.showPrompt         !== false;
                 this.screenshotEnabled = msg.settings.screenshotEnabled  !== false;
+                this.showToggleButton  = msg.settings.showToggleButton   !== false;
+                this.showQuickAdd     = msg.settings.showQuickAdd       !== false;
+                this.idleTransparent  = msg.settings.idleTransparent    !== false;
                 this.panelPosition     = msg.settings.panelPosition      || 'right';
                 this.theme             = msg.settings.theme              || 'light';
                 this.applySettings();

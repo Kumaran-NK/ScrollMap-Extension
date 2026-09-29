@@ -69,6 +69,7 @@ chrome.runtime.onInstalled.addListener(async details => {
             sm_schema_version: 1,
             settings: {
                 autoSave: true, showPrompt: true, screenshotEnabled: true,
+                showToggleButton: true, showQuickAdd: true, idleTransparent: true,
                 panelPosition: 'right', theme: 'light',
             },
             sm_install_date: new Date().toISOString(),

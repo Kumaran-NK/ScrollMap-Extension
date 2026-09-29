@@ -143,14 +143,27 @@
     cursor: pointer; z-index: 999998;
     font-size: 18px; display: flex; align-items: center; justify-content: center;
     box-shadow: -2px 2px 10px rgba(22,163,74,0.3);
-    transition: all 0.22s cubic-bezier(0.4,0,0.2,1); color: white;
+    color: white;
+    transition: opacity 0.28s ease, width 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s, transform 0.22s;
 }
-.scrollmap-toggle:hover { width: 42px; box-shadow: -3px 3px 16px rgba(22,163,74,0.45); }
+.scrollmap-toggle.sm-idle-transparent {
+    opacity: 0.35;
+}
+.scrollmap-toggle.sm-idle-transparent:hover,
+.scrollmap-toggle.sm-idle-transparent:focus-visible,
+.scrollmap-toggle.sm-idle-transparent.sm-near-mouse,
+.scrollmap-toggle:hover {
+    opacity: 1; width: 42px; box-shadow: -3px 3px 16px rgba(22,163,74,0.45);
+}
 .scrollmap-toggle.scrollmap-left {
     right: auto; left: 0; border-radius: 0 8px 8px 0;
     box-shadow: 2px 2px 10px rgba(22,163,74,0.3);
 }
-.scrollmap-toggle.scrollmap-left:hover { box-shadow: 3px 3px 16px rgba(22,163,74,0.45); }
+.scrollmap-toggle.scrollmap-left:hover,
+.scrollmap-toggle.scrollmap-left:focus-visible,
+.scrollmap-toggle.scrollmap-left.sm-near-mouse {
+    box-shadow: 3px 3px 16px rgba(22,163,74,0.45);
+}
 
 /* ─── QUICK ADD ──────────────────────────────────── */
 .scrollmap-quick-add {
@@ -161,10 +174,19 @@
     cursor: pointer; z-index: 999998; font-size: 26px;
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 4px 16px rgba(22,163,74,0.4);
-    transition: all 0.22s cubic-bezier(0.4,0,0.2,1); line-height: 1;
+    line-height: 1;
+    transition: opacity 0.28s ease, transform 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s;
+}
+.scrollmap-quick-add.sm-idle-transparent {
+    opacity: 0.25;
+}
+.scrollmap-quick-add.sm-idle-transparent:hover,
+.scrollmap-quick-add.sm-idle-transparent:focus-visible,
+.scrollmap-quick-add.sm-idle-transparent.sm-near-mouse,
+.scrollmap-quick-add:hover {
+    opacity: 1; transform: scale(1.1) rotate(90deg); box-shadow: 0 6px 22px rgba(22,163,74,0.5);
 }
 .scrollmap-quick-add.scrollmap-left { right: auto; left: 24px; }
-.scrollmap-quick-add:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0 6px 22px rgba(22,163,74,0.5); }
 .scrollmap-quick-add:active { transform: scale(0.95); }
 
 /* ─── MINI MARKERS ───────────────────────────────── */

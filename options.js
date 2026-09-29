@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('autoSave').checked          = settings.autoSave           !== false;
         document.getElementById('showPrompt').checked        = settings.showPrompt         !== false;
         document.getElementById('screenshotEnabled').checked = settings.screenshotEnabled  !== false;
+        document.getElementById('showToggleButton').checked  = settings.showToggleButton   !== false;
+        document.getElementById('showQuickAdd').checked      = settings.showQuickAdd       !== false;
+        document.getElementById('idleTransparent').checked   = settings.idleTransparent    !== false;
         document.getElementById('panelPosition').value       = settings.panelPosition      || 'right';
         document.getElementById('theme').value               = settings.theme              || 'light';
     } catch (e) {
@@ -33,6 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             autoSave:           document.getElementById('autoSave').checked,
             showPrompt:         document.getElementById('showPrompt').checked,
             screenshotEnabled:  document.getElementById('screenshotEnabled').checked,
+            showToggleButton:   document.getElementById('showToggleButton').checked,
+            showQuickAdd:       document.getElementById('showQuickAdd').checked,
+            idleTransparent:    document.getElementById('idleTransparent').checked,
             panelPosition:      document.getElementById('panelPosition').value,
             theme:              document.getElementById('theme').value,
             lastUpdated:        new Date().toISOString()
