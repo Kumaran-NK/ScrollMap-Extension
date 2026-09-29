@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="12" y1="10" x2="116" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12351F"/>
+      <stop offset="1" stop-color="#08130C"/>
+    </linearGradient>
+
+    <linearGradient id="route" x1="25" y1="22" x2="101" y2="104" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A7F3D0"/>
+      <stop offset=".42" stop-color="#4ADE80"/>
+      <stop offset="1" stop-color="#16A34A"/>
+    </linearGradient>
+
+    <linearGradient id="panel" x1="33" y1="39" x2="83" y2="83" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2F7F48"/>
+      <stop offset="1" stop-color="#174D2B"/>
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Extension icon -->
+  <rect x="5" y="5" width="118" height="118" rx="28" fill="url(#bg)"/>
+
+  <!-- Layered content / viewport cards -->
+  <rect x="24" y="26" width="69" height="27" rx="10"
+        transform="rotate(-7 24 26)"
+        fill="#123B24" stroke="#2E6740" stroke-width="1.5"/>
+
+  <rect x="25" y="76" width="69" height="28" rx="10"
+        transform="rotate(7 25 76)"
+        fill="#123B24" stroke="#2E6740" stroke-width="1.5"/>
+
+  <!-- Main active panel -->
+  <rect x="22" y="45" width="75" height="36" rx="12"
+        fill="url(#panel)" stroke="#5BE28A" stroke-width="2"/>
+
+  <!-- Content lines -->
+  <circle cx="38" cy="57" r="6.5" fill="#86EFAC"/>
+  <rect x="50" y="53" width="30" height="5" rx="2.5" fill="#D1FAE5"/>
+  <rect x="50" y="63" width="21" height="5" rx="2.5" fill="#86EFAC"/>
+
+  <!-- Abstract scrolling ribbon -->
+  <path d="M18 89
+           C35 96 49 98 62 94
+           C75 90 86 81 94 68
+           C102 55 104 41 97 30"
+        stroke="#0B1B10" stroke-width="11" stroke-linecap="round"
+        opacity=".65"/>
+
+  <path d="M18 89
+           C35 96 49 98 62 94
+           C75 90 86 81 94 68
+           C102 55 104 41 97 30"
+        stroke="url(#route)" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Scrollbar -->
+  <rect x="98" y="29" width="7" height="70" rx="3.5" fill="#255B35"/>
+  <rect x="98" y="52" width="7" height="22" rx="3.5" fill="#E7FCEB" filter="url(#glow)"/>
+
+  <!-- Position dots -->
+  <circle cx="110" cy="42" r="2.5" fill="#2F7A47"/>
+  <circle cx="110" cy="63" r="2.5" fill="#86EFAC"/>
+  <circle cx="110" cy="85" r="2.5" fill="#2F7A47"/>
+
+  <!-- Tiny motion ticks -->
+  <path d="M19 42H26M17 49H24"
+        stroke="#4ADE80" stroke-width="2.8" stroke-linecap="round" opacity=".7"/>
+</svg>

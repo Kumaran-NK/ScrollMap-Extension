@@ -146,6 +146,11 @@
     color: white;
     transition: opacity 0.28s ease, width 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s, transform 0.22s;
 }
+.scrollmap-toggle svg {
+    width: 22px; height: 22px;
+    display: block; pointer-events: none;
+    border-radius: 5px; flex-shrink: 0;
+}
 .scrollmap-toggle.sm-idle-transparent {
     opacity: 0.35;
 }
