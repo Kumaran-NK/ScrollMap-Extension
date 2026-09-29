@@ -137,19 +137,20 @@
 /* ─── TOGGLE BUTTON ─────────────────────────────── */
 .scrollmap-toggle {
     position: fixed; top: 100px; right: 0; left: auto;
-    width: 36px; height: 44px;
+    width: 44px; height: 48px;
     background: linear-gradient(135deg, var(--sm-green-600), var(--sm-green-800));
-    border: none; border-radius: 8px 0 0 8px;
+    border: none; border-radius: 12px 0 0 12px;
     cursor: pointer; z-index: 999998;
-    font-size: 18px; display: flex; align-items: center; justify-content: center;
-    box-shadow: -2px 2px 10px rgba(22,163,74,0.3);
-    color: white;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: -3px 3px 14px rgba(22,163,74,0.35);
+    color: white; padding: 0 0 0 4px;
     transition: opacity 0.28s ease, width 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s, transform 0.22s;
 }
 .scrollmap-toggle svg {
-    width: 22px; height: 22px;
+    width: 30px; height: 30px;
     display: block; pointer-events: none;
-    border-radius: 5px; flex-shrink: 0;
+    border-radius: 7px; flex-shrink: 0;
+    transition: transform 0.2s;
 }
 .scrollmap-toggle.sm-idle-transparent {
     opacity: 0.35;
@@ -158,11 +159,15 @@
 .scrollmap-toggle.sm-idle-transparent:focus-visible,
 .scrollmap-toggle.sm-idle-transparent.sm-near-mouse,
 .scrollmap-toggle:hover {
-    opacity: 1; width: 42px; box-shadow: -3px 3px 16px rgba(22,163,74,0.45);
+    opacity: 1; width: 50px; box-shadow: -4px 4px 20px rgba(22,163,74,0.5);
+}
+.scrollmap-toggle:hover svg {
+    transform: scale(1.08);
 }
 .scrollmap-toggle.scrollmap-left {
-    right: auto; left: 0; border-radius: 0 8px 8px 0;
-    box-shadow: 2px 2px 10px rgba(22,163,74,0.3);
+    right: auto; left: 0; border-radius: 0 12px 12px 0;
+    padding: 0 4px 0 0;
+    box-shadow: 3px 3px 14px rgba(22,163,74,0.35);
 }
 .scrollmap-toggle.scrollmap-left:hover,
 .scrollmap-toggle.scrollmap-left:focus-visible,
